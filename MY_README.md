@@ -35,13 +35,21 @@ INIZIO PARTE OPERATIVA
    in seguito si crea anche il model e il controller per questa migration
    php artisan make:model Post
    php artisan make:controller --resource PostController
+   (importare il model una volta creato il controller con use App\Post)
    questo primo controller per i post sara' quello lato pubblico, sara' necessario crearne uno per utenti loggati
 
 8) eseguire le migration, laravel crea gia' una migration users che possiamo utilizzare:
-   php artisan migrate   
+   php artisan migrate 
+
+9) adesso in web.php si creano le rotte per le pagine che vedra' un utente registrato e
+   quelle per un utente solo visitatore che ovviamente saranno di sola lettura (index e show)
+   (N.B. nel file web.php importare Illuminate\Support\Facades\Auth; se no Auth dara' errore)
+
+10) nella cartella resources/views si creano una cartella che conterra' le view per l'utente registrato 
+   (admin) mentre per gli utenti ospiti le rotte verranno lasciate nella cartella views
 
 
 
-eseuite le migratrions
+
 Creiamo la crud per i post con relative view (lato admin)
 Creiamo la view index e show dei post lato pubblico
