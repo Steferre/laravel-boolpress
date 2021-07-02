@@ -12,7 +12,6 @@
 <body>
     @include('partials.header')
     
-    <h1>Benvenuto Visitatore</h1>
     @yield('content')
 </body>
 </html>
