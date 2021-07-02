@@ -18,13 +18,13 @@ use Illuminate\Support\Facades\Route;
     return view('welcome');
 }); */
 
-//Route::get('/', 'HomeController@index')->name('');
+//
 
 // sezione rotte utente ospite
 // un utente ospite avra' la possibilita' di vedere la lista dei post e leggere il singolo post
 // solo due rotte index e show
-
-Route::get('/', 'PostController@index')->name('posts.index');
+Route::get('/', 'HomeController@index')->name('index');
+Route::get('/posts', 'PostController@index')->name('posts.index');
 Route::get('/posts/{post}', 'PostController@show')->name('posts.show');
 
 
