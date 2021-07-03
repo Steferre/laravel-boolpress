@@ -48,8 +48,41 @@ INIZIO PARTE OPERATIVA
 10) nella cartella resources/views si creano una cartella che conterra' le view per l'utente registrato 
    (admin) mentre per gli utenti ospiti le rotte verranno lasciate nella cartella views
 
+CREAZIONE RELAZIONI TRA TABELLE
 
+11) e' necessario creare una FOREIGN KEY come per i database, i comandi sono:
+    comando da terminale: add_column_to_posts_table
+    crea una migration che aggiunge una colonna quella della foreign key
+    (N.B. per creare la colonna della foreign e permettere la relazione, e' necessario che non ci siano dati nella tabella dei post)
 
+12) nella migration add_column_to_posts_table inserisco questi dati:
+    $table->unsignedBigInteger('user_id');
 
-Creiamo la crud per i post con relative view (lato admin)
-Creiamo la view index e show dei post lato pubblico
+    $table->foreign('user_id')
+       ->references('id')
+       ->on('users');
+
+13) i comandi al punto 12) possono essere condensati in un solo comando:
+    $table->foreignId('user_id')
+      ->constrained();
+
+14) nella migration per creare la colonna foreign key mettere nella funzione down:
+    $table->dropForeign('posts_user_id_foreign');
+    $table->dropColumn('user_id');
+
+    sono i comandi che verranno eseguiti per un eventuale roolback
+    (posts_user_id_foreign e' un patterne che viene creato dal database prende come prima parte il nome della tabella dove si crea la foriegn key, il nome della colonna foreign key e la parola foreign tutto separato da underscore)
+
+15) e' necessario aggiungere le relazioni anche nei model delle due tabelle
+    per mappare una relazione dobbiamo creare una mapping tra tabela principale e secondaria e viceversa
+    in entrambi i model va quindi registrata la relazione, che puo' essere di 1 a 1, di 1 a molti, e di molti a molti
+
+16) codice da scrivere nel model per una relazione di 1 a molti:
+    un user puo' avere molti post, viceversa un post puo' avere solo un user che lo genera:
+    quindi nel model user scriviamo una funzione che mappa la relazione multipla con i post
+
+    public function posts() il nome della funzione e' al plurale per evidenziare la relazione multipla
+    return $this->hasMany('App\Post')
+    funzione hasMany() identifica la relazione multipla e come argomento viene passato direttamente il model Post
+
+    al contrario nel model Post verra' creata la funzione user() al singolare perche' un post puo' avere solo un utente padre e verra' usata la funzione belongsTo nel return e come argomento verra' passato il model User 
