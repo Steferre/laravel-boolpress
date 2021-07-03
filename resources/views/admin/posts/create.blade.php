@@ -1,6 +1,8 @@
 <a href="{{ route('admin.index') }}">Torna alla homeAdmin</a>
 <a href="{{ route('admin.posts.index') }}">Torna alla lista dei post</a>
 
+@include('partials.errorsBox')
+
 <form action="{{ route('admin.posts.store') }}" method="post">
     @csrf
 

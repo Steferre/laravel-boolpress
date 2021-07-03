@@ -18,6 +18,10 @@ class PostController extends Controller
             'posts' => Post::all()
         ];
 
+        if (count(Post::all()) < 1) {
+            abort('404');
+        };
+
         return view('posts.index', $data);
     }
 
