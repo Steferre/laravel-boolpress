@@ -1,11 +1,14 @@
-<h1>pagina di prova dettagli singolo post</h1>
+@extends('layouts.default')
 
-<p>
-    esempio di testo del post
-    <a href="#">modifica</a>
-    <a href="#">
-        @include('partials.deleteBtn', ['post' => $post])
-    </a>
-</p> 
+@section('pageTitle', 'dettaglio post Admin')
 
-<a href="{{route('admin.posts.index')}}">torna alla lista dei post</a>
+@section('content')
+    <h1>pagina dettagli singolo post</h1>
+
+    <p>Titolo: {{ $post->title }}</p>
+    <p>Testo del Post: {{ $post->content }}</p>
+    <p>Categoria: {{ $post->category ? $post->category->name : '-'}}</p> 
+    <a href="{{ route('admin.posts.edit', $post->id) }}">modifica</a>
+    @include('partials.deleteBtn', ['post' => $post])
+    <a href="{{route('admin.posts.index')}}">torna alla lista dei post</a>    
+@endsection

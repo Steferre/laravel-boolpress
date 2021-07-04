@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Post;
+use App\Category;
 
 use Illuminate\Support\Str;
 class PostController extends Controller
@@ -14,10 +16,11 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $data = [
             'posts' => Post::all()
+            //   ->where('user_id', $request->user()->id)
         ];
 
         // controllo del fatto se siano o meno presenti post
@@ -38,7 +41,9 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::all();
+
+        return view('admin.posts.create', ['categories' => $categories]);
     }
 
     /**
@@ -59,11 +64,15 @@ class PostController extends Controller
         $request->validate([
             'title' => 'string|required|max:255',
             'content' => 'string|required',
+            'category_id' => 'nullable|exists:categories,id'
         ]);
         // istanzio un nuovo fumetto
         $newPost = new Post();
         $newPost->title = $postData['title'];
         $newPost->content = $postData['content'];
+
+        //aggiungo anche user_id
+        $newPost->user_id = $request->user()->id;
 
         // procedura per generare lo slug
         $slug = Str::slug($newPost->title);
@@ -117,7 +126,14 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('admin.posts.edit', compact('post'));
+        $categories = Category::all();
+
+        $data = [
+            'post' => $post,
+            'categories' => $categories
+        ];
+
+        return view('admin.posts.edit', compact('post', 'categories'));
     }
 
     /**
@@ -127,9 +143,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
-        $modifiedPost = Post::findOrFail($id); 
+        $modifiedPost = Post::findOrFail($post->id); 
 
         // come in store leggiamo tutti i dati passati dal form usando il metodo all di request
         $modifiedData = $request->all();
@@ -137,20 +153,38 @@ class PostController extends Controller
         $request->validate([
             'title' => 'string|required|max:255',
             'content' => 'string|required',
+            'catgeory_id' => 'nullable|exists:categories,id'
         ]);
 
+        // attenzione alla modifica del titolo
+        // se viene modificato, e' necessario ricreare lo slug
+        if($modifiedData['title'] != $post->title) {
+            // genero uno slug modificato
+            $slug = Str::slug($modifiedData['title']);
+            $slugBase = $slug;
+            
+            $postAlreadyDone = Post::where('slug', $slug)->first();
+            $contatore = 1;
+
+            while($postAlreadyDone) {
+                $slug = $slugBase . '-' . $contatore;
+                $contatore++;
+                $postAlreadyDone = Post::where('slug', $slug)->first();
+            }
+            $modifiedData['slug'] = $slug;
+        }
 
         $modifiedPost->title = $modifiedData['title'];
         $modifiedPost->content = $modifiedData['content'];
 
-        $modifiedPost->save();
+        $post->update($modifiedData);
 
         // tramite il metodo update aggiorniamo i dati che abbiamo raccolto
         //$modifiedPost->update($modifiedData);
 
         // il return di questa funzione come per lo store non mostrera' una view
         // ma tramite un redirect ci mostrera' la pagina del dettaglio modificato
-        return redirect()->route('admin.posts.show', $modifiedPost->id);
+        return redirect()->route('admin.posts.index');
     }
 
     /**

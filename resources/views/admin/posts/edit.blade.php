@@ -1,20 +1,36 @@
-<a href="{{ route('admin.index') }}">Torna alla homeAdmin</a>
-<a href="{{ route('admin.posts.index') }}">Torna alla lista dei post</a>
-<a href="{{ route('admin.posts.show', $posts[0]['id']) }}">Torna al dettaglio del post</a>
+@extends('layouts.default')
 
-@include('partials.errorsBox')
+@section('pageTitle', 'dettaglio post Admin')
 
-<form action="{{ route('admin.posts.update', $posts[0]['id']) }}" method="post">
-    @csrf
+@section('content')
+    <a href="{{ route('admin.index') }}">Torna alla homeAdmin</a>
+    <a href="{{ route('admin.posts.index') }}">Torna alla lista dei post</a>
+    <a href="{{ route('admin.posts.show', $post->id) }}">Torna al dettaglio del post</a>
 
-    @method('PUT')
+    @include('partials.errorsBox')
 
-    <label for="title">Title</label>
-    <input type="text" name="title" id="title" value="{{ $posts[0]['title'] }}">
+    <form action="{{ route('admin.posts.update', $post->id) }}" method="post">
+        @csrf
 
-    <label for="content">Testo Post</label>
-    <textarea name="content" id="content" rows="10">{{ $posts[0]['content'] }}</textarea>
-    {{-- <input type="text" name="content" id="content"> --}}
+        @method('PUT')
 
-    <input type="submit" value="Salva">
-</form>
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" value="{{ $post->title }}">
+
+        <label for="content">Testo Post</label>
+        <textarea name="content" id="content" rows="10">{{ $post->content }}</textarea>
+
+        <label for="category">Categoria</label>
+        <select name="category_id">
+            <option value="">seleziona una categoria</option>
+            @foreach($categories as $category)
+                <option value="{{ $category->id }}">
+                {{ $category->id == old('category_id', $post->category_id) ? 'selected' : ''}}
+                {{ $category->name }}
+                </option>
+            @endforeach
+        </select>
+
+        <input type="submit" value="Salva">
+    </form>    
+@endsection
