@@ -1,0 +1,15 @@
+.navListStyle {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+    .btnStyle {
+        .linkStyle {
+            &:hover {
+                background-color: lightblue;
+                color: white;
+                font-weight: bold;
+                transition: 0.5s;
+            }
+        }
+    }
+}

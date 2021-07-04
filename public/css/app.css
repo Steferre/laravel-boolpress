@@ -1,5 +1,17 @@
 @import url(https://fonts.googleapis.com/css?family=Nunito);@charset "UTF-8";
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  max-width: 950px;
+  margin: 0 auto;
+}
+
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
  * Copyright 2011-2021 The Bootstrap Authors
@@ -10940,5 +10952,25 @@ a.text-dark:focus {
     color: inherit;
     border-color: #dee2e6;
   }
+}
+
+.navListStyle {
+  list-style: none;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.navListStyle .btnStyle .linkStyle:hover {
+  background-color: lightblue;
+  color: white;
+  font-weight: bold;
+  transition: 0.5s;
+}
+
+.contentBox {
+  text-align: center;
+  background: linear-gradient(45deg, green, white, red);
+  border-radius: 10px;
+  padding: 50px 0;
 }
 

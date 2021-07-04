@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 //use App\Http\Controllers\Controller;
-
+use App\Post;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -26,6 +26,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('index');
+        $data = [
+            'posts' => Post::all()
+        ];
+
+        //dump(count(Post::all()));
+
+        return view('index', $data);
     }
 }    
