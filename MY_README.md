@@ -86,3 +86,12 @@ CREAZIONE RELAZIONI TRA TABELLE
     funzione hasMany() identifica la relazione multipla e come argomento viene passato direttamente il model Post
 
     al contrario nel model Post verra' creata la funzione user() al singolare perche' un post puo' avere solo un utente padre e verra' usata la funzione belongsTo nel return e come argomento verra' passato il model User 
+
+CREAZIONE RELAZIONE MOLTI A MOLTI
+
+17a) prima di creare la migration per la tabella ponte e' necessario avere entrambe le tabelle disponibili a database, con relativi model ed eventuali seeder (se necessari) o crud nel controller
+
+17b) in una relazione molti a molti e' necessario creare una tabella ponte, quindi si esegue una migration e come nome della tabella si usano i nomi delle due tabelle che si devono collegare al SINGOLARE e in ORDINE ALFABETICO separate da un UNDERSCORE
+
+
+
