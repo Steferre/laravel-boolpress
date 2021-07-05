@@ -31,6 +31,14 @@
             @endforeach
         </select>
 
+        @foreach($tags as $tag)
+            <label>
+                <input type="checkbox" name="tags[]" value="{{$tag->id}}"
+                {{ $post->tags->contains($tag) ? 'checked' : ''}}>
+                {{ $tag->name }}
+            </label>    
+        @endforeach
+
         <input type="submit" value="Salva">
     </form>    
 @endsection

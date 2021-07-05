@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Tag;
+use App\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class TagController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +15,9 @@ class TagController extends Controller
      */
     public function index()
     {
-        $tags = Tag::all();
+        $categories = Category::all();
 
-        return view('admin.tags.index', compact('tags'));
+        return view('admin.categories.index', compact('categories'));
     }
 
     /**

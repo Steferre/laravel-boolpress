@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Post;
 use App\Category;
+use App\Tag;
 
 use Illuminate\Support\Str;
 class PostController extends Controller
@@ -42,8 +43,9 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
+        $tags = Tag::all();
 
-        return view('admin.posts.create', ['categories' => $categories]);
+        return view('admin.posts.create', ['categories' => $categories, 'tags' => $tags]);
     }
 
     /**
@@ -64,7 +66,8 @@ class PostController extends Controller
         $request->validate([
             'title' => 'string|required|max:255',
             'content' => 'string|required',
-            'category_id' => 'nullable|exists:categories,id'
+            'category_id' => 'nullable|exists:categories,id',
+            'tags' => 'exists:tags,id'
         ]);
         // istanzio un nuovo fumetto
         $newPost = new Post();
@@ -98,6 +101,16 @@ class PostController extends Controller
         // quindi lo assegno al nuovo post
         $newPost->slug = $slug;
 
+        
+        // faccio il controllo se ci siano tag aggiunti dall'utente
+        if (!key_exists('tags', $postData)){
+            $postData['tags'] = [];
+        }
+
+        // l'if mi passera' un array vuoto se non ci sono tag scelti 
+        // in caso contrario aggiungo i tag
+        $newPost->tags()->attach($postData['tags']);
+
         // per salvare i dati si usa il metodo save del Model
         $newPost->save();
 
@@ -127,13 +140,15 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $categories = Category::all();
+        $tags = Tag::all();
 
         $data = [
             'post' => $post,
-            'categories' => $categories
+            'categories' => $categories,
+            'tags' => $tags
         ];
 
-        return view('admin.posts.edit', compact('post', 'categories'));
+        return view('admin.posts.edit', compact('post', 'categories', 'tags'));
     }
 
     /**
@@ -153,7 +168,8 @@ class PostController extends Controller
         $request->validate([
             'title' => 'string|required|max:255',
             'content' => 'string|required',
-            'catgeory_id' => 'nullable|exists:categories,id'
+            'catgeory_id' => 'nullable|exists:categories,id',
+            'tags' => 'exists:tags,id'
         ]);
 
         // attenzione alla modifica del titolo
@@ -177,9 +193,15 @@ class PostController extends Controller
         $modifiedPost->title = $modifiedData['title'];
         $modifiedPost->content = $modifiedData['content'];
 
+        if(!key_exists('tags', $modifiedData)){
+            $modifiedData['tags'] = [];
+        }
+
+        $post->tags()->sync($modifiedData['tags']);
+
         $post->update($modifiedData);
 
-        // tramite il metodo update aggiorniamo i dati che abbiamo raccolto
+        // tramite il metodo update aggiorniamo tutti i dati che abbiamo raccolto
         //$modifiedPost->update($modifiedData);
 
         // il return di questa funzione come per lo store non mostrera' una view
