@@ -10974,3 +10974,7 @@ a.text-dark:focus {
   padding: 50px 0;
 }
 
+tr td {
+  padding-right: 25px;
+}
+

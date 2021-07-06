@@ -7,7 +7,7 @@
 
     <a href="{{ route('admin.posts.create') }}">Crea un nuovo post</a>
     
-    <ul>
+    {{-- <ul>
     @foreach($posts as $post)
         <li>
             Titolo: {{ $post->title }} 
@@ -16,7 +16,31 @@
             </strong>
         </li>
     @endforeach
-    </ul>
+    </ul> --}}
+
+    <table>
+        <thead>
+           <tr>
+                <th>ID</th>
+                <th>TITLE</th>
+                <th>CREATED AT</th>
+           </tr> 
+        </thead>
+        <tbody>
+            @foreach($posts as $post)
+                <tr>
+                    <td>{{ $post->id }}</td>
+                    <td>{{ $post->title }}</td>
+                    <td>{{ $post->created_at }}</td>
+                    <td><a href="{{ route('admin.posts.show', $post->id) }}">dettagli post</a></td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+
+
+
     
     
     <a href="{{ route('admin.index') }}">torna alla homeAdmin</a>
