@@ -17,3 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// tenere presente che la rotta /posts come tutte le altre che si possono creare avranno davanti api come prefisso, che le differenzia dalle rotte normali, che possono avere lo stesso nome
+Route::get('/posts', 'Api\PostController@index');

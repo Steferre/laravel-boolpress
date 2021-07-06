@@ -93,5 +93,13 @@ CREAZIONE RELAZIONE MOLTI A MOLTI
 
 17b) in una relazione molti a molti e' necessario creare una tabella ponte, quindi si esegue una migration e come nome della tabella si usano i nomi delle due tabelle che si devono collegare al SINGOLARE e in ORDINE ALFABETICO separate da un UNDERSCORE
 
+CREAZIONE ROTTE API
 
+18) analogamente alle rotte create in web.php queste le scriveremo nel file api.php con stessa sintassi
 
+19) creare un controller che va messo in una cartella dedicata (es Api come nome della cartella) i comandi artisan per la creazione del controller saranno gli stessi
+
+20) come unica differenza i metodi creati nel controller non ritorneranno una view ma un file json, in quanto dovranno essere letti da un utente che ottiene i dati nel front tramite delle chiamate axios
+codice da scrivere nel return della function:
+   return response()->json()
+   N.B. all interno del metodo json andra' passato un array di dati e non direttamente i dati che vogliamo passare al front, si crerea' una chiave a cui verranno associati i dati recuperati dal database, questa chiave sara' sempre la stessa per favorire il recupero dei dati stessi a chi li riceve nel front (esempio nome della chiave 'results')
