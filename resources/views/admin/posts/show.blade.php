@@ -5,6 +5,10 @@
 @section('content')
     <h1>pagina dettagli singolo post</h1>
 
+    
+    <img src="{{ asset('storage/'. $post->cover_img) }}" style="width: 100px; max-height: 100px; object-fit: cover">
+    
+
     <p>Titolo: {{ $post->title }}</p>
     <p>Testo del Post: {{ $post->content }}</p>
     <p>Categoria: {{ $post->category ? $post->category->name : '-'}}</p>

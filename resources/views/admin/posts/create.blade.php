@@ -8,8 +8,11 @@
 
     @include('partials.errorsBox')
 
-    <form action="{{ route('admin.posts.store') }}" method="post">
+    <form action="{{ route('admin.posts.store') }}" method="post" enctype="multipart/form-data">
         @csrf
+
+        <label>Immagine del Post</label>
+        <input type="file" name="postImage">
 
         <label for="title">Title</label>
         <input type="text" name="title" id="title">
@@ -21,7 +24,7 @@
         <select name="category_id">
             <option value="">seleziona una categoria</option>
             @foreach($categories as $category)
-                <option value="{{ $category->name }}">
+                <option value="{{ $category->id }}">
                 {{ $category->id == old('category_id', '') ? 'selected' : ''}}
                 {{ $category->name }}
                 </option>

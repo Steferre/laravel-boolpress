@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\Category;
 use App\Tag;
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 class PostController extends Controller
 {
@@ -59,6 +59,8 @@ class PostController extends Controller
         // grazie a $request->all prendo tutte le coppie chiave valore inviate/registrate nel form dall utente
         // salvandole in postData ottengo un array associativo
         $postData = $request->all();
+
+        
         // ora posso salvare questi dati in una nuova riga della mia tabella
         // prima di instanziare un nuovo post creo una validazione per i dati che deve inserire l utente
         // grazie a laravel con il metodo validate
@@ -73,6 +75,7 @@ class PostController extends Controller
         $newPost = new Post();
         $newPost->title = $postData['title'];
         $newPost->content = $postData['content'];
+        $newPost->category_id = $postData['category_id'];
 
         //aggiungo anche user_id
         $newPost->user_id = $request->user()->id;
@@ -101,7 +104,17 @@ class PostController extends Controller
         // quindi lo assegno al nuovo post
         $newPost->slug = $slug;
 
-        
+        // aggiungiamo anche l'immagine
+        if (key_exists('postImage', $postData)) {
+            $storageResult = Storage::put("postImages", $postData['postImage']);
+
+            $newPost->cover_img = $storageResult;
+        }
+
+        // per salvare i dati si usa il metodo save del Model
+        $newPost->save();
+
+        // lo metto dopo il save se no mi da errore perche' non ho ancora un id per il post creato
         // faccio il controllo se ci siano tag aggiunti dall'utente
         if (!key_exists('tags', $postData)){
             $postData['tags'] = [];
@@ -111,8 +124,6 @@ class PostController extends Controller
         // in caso contrario aggiungo i tag
         $newPost->tags()->attach($postData['tags']);
 
-        // per salvare i dati si usa il metodo save del Model
-        $newPost->save();
 
         //essendo un metodo post il return della funzione non mi dara' una view
         // a tramite un redirect portero' l'admin alla lista dei post index
@@ -199,6 +210,18 @@ class PostController extends Controller
 
         $post->tags()->sync($modifiedData['tags']);
 
+        // per l'immagine prima di caricare quella nuova e' meglio cancellare quella vecchia per non avere immagini in eccesso
+        if (key_exists("postImage", $modifiedData)) {
+            if ($post->cover_img) {
+                Storage::delete($post->cover_img);
+            }
+            
+            $storageResult = Storage::put("postImages", $modifiedData['postImage']);
+    
+            $modifiedPost->cover_img = $storageResult;
+            
+        }
+        
         $post->update($modifiedData);
 
         // tramite il metodo update aggiorniamo tutti i dati che abbiamo raccolto
@@ -218,6 +241,7 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
+        $post->tags()->detach();
         $post->delete();
 
         //non essendoci piu' la pagina del post che e' stato eliminato

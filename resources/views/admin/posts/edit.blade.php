@@ -9,10 +9,17 @@
 
     @include('partials.errorsBox')
 
-    <form action="{{ route('admin.posts.update', $post->id) }}" method="post">
+    {{-- @if($post->cover_url)
+      <img src="{{ asset('storage/' . $post->cover_img) }}" class="img-fluid" style="width: 100%; max-height: 150px; object-fit: cover">
+    @endif --}}
+
+    <form action="{{ route('admin.posts.update', $post->id) }}" method="post" enctype="multipart/form-data">
         @csrf
 
         @method('PUT')
+
+        <label>Immagine del Post</label>
+        <input type="file" name="postImage">
 
         <label for="title">Title</label>
         <input type="text" name="title" id="title" value="{{ $post->title }}">

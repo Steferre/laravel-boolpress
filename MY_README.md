@@ -103,3 +103,23 @@ CREAZIONE ROTTE API
 codice da scrivere nel return della function:
    return response()->json()
    N.B. all interno del metodo json andra' passato un array di dati e non direttamente i dati che vogliamo passare al front, si crerea' una chiave a cui verranno associati i dati recuperati dal database, questa chiave sara' sempre la stessa per favorire il recupero dei dati stessi a chi li riceve nel front (esempio nome della chiave 'results')
+
+CARICAMENTO IMMAGINI
+
+21) prima cosa da fare per poter caricare immagini nel nostro progetto laravel e' impostare il filesystem disk di default a 'public'
+i file verranno caricati nella cartella storage/app/public
+
+22) adesso creiamo un SYMLINK "storage" (link fasullo che punta alla cartella storage/app/public) usando il comando:
+   php artisan storage:link 
+
+23) a questo punto e' necessario creare una nuova migration per aggiungere la colonna image nel db 
+
+24) per poter caricare un file bisogna aggiungere al form un attributo importante:
+   "enctype='multipart/form-data'" e nell'input mettere type="file" name="per esempio postImage"
+
+25) nel controller nella funzione store useremo:
+   Storage::put() per caricare l immagine nella cartella storage/app/public
+
+26) infine, per visualizzare il file caricato, nella view usiamo la funzione asset() con una piccola modifica:
+    prima del path dell'immagine dobbiamo scrivere storage/ e concatenarlo con il nostro path
+    questo perche' abbiamo creato, in precedenza, un link simbolico storage

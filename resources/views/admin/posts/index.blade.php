@@ -32,6 +32,11 @@
                     <td>{{ $post->id }}</td>
                     <td>{{ $post->title }}</td>
                     <td>{{ $post->created_at }}</td>
+                    <td>
+                        @if($post->cover_img)
+                            <img src="{{ asset('storage/' . $post->cover_img) }}" style="width: 80px; max-height: 80px; object-fit: cover">
+                        @endif
+                    </td>
                     <td><a href="{{ route('admin.posts.show', $post->id) }}">dettagli post</a></td>
                 </tr>
             @endforeach
